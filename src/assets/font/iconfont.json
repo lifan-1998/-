@@ -1,0 +1,23 @@
+{
+  "id": "",
+  "name": "",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "1311996",
+      "name": "设置",
+      "font_class": "shezhi",
+      "unicode": "e644",
+      "unicode_decimal": 58948
+    },
+    {
+      "icon_id": "14626418",
+      "name": "警告",
+      "font_class": "jinggao",
+      "unicode": "e6d6",
+      "unicode_decimal": 59094
+    }
+  ]
+}
