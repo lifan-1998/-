@@ -8,10 +8,7 @@
 
     <!-- 标签页 -->
     <el-tabs v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="指示看板" name="first"></el-tab-pane>
-      <el-tab-pane label="告警信息" name="second"></el-tab-pane>
-      <el-tab-pane label="监控列表" name="third"></el-tab-pane>
-      <el-tab-pane label="告警接收规则" name="fourth"></el-tab-pane>
+      <el-tab-pane v-for="(item,index) in list" :key="index" :label="item.label" :name="item.name"></el-tab-pane>
     </el-tabs>
 
     <!-- 页码 -->
@@ -34,25 +31,27 @@
 
     <!-- 表格 -->
     <div class="table">
-    <el-table
-      :data="tableData1"
-      style="width: 100%"
-      row-key="id"
-      :span-method="objectSpanMethod"
-      border
-      lazy
-      :load="load"
-      :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
-    >
-      <el-table-column prop="date" label="监控指标" width="180"></el-table-column>
-      <el-table-column prop="way" label="监控方法" width="180">
-        <img :src="tableData1[0].way" alt class="table-img" />周期不定性预测
-      </el-table-column>
-      <el-table-column prop="address" label="监控时段"></el-table-column>
-      <el-table-column prop="name" label="修改人" width="180"></el-table-column>
-      <el-table-column prop="date" label="修改时间" width="180"></el-table-column>
-      <el-table-column prop="address" label="操作"></el-table-column>
-    </el-table>
+      <el-table
+        :data="tableData1"
+        style="width: 100%"
+        row-key="id"
+        :span-method="objectSpanMethod"
+        border
+        lazy
+        :load="load"
+        :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+      >
+        <el-table-column
+          v-for="(item,index) in tableList"
+          :key="index"
+          :prop="item.pop"
+          :label="item.label"
+          :width="item.width"
+        >
+          <img v-if="index==2" :src="tableData1[0].way" alt class="table-img" />
+          <span v-if="index==2">周期不定性预测</span>
+        </el-table-column>
+      </el-table>
     </div>
   </div>
 </template>
@@ -67,6 +66,56 @@ export default {
       currentPage2: 2,
       currentPage3: 3,
       currentPage4: 4,
+      tableList: [
+        {
+          pop: "date",
+          label: "监控指标",
+          width:180
+        },
+        {
+          pop: "name",
+          label: "监控方法",
+          width:180
+        },
+        {
+          pop: "address",
+          label: "监控时段",
+          width:180
+        },
+        {
+          pop: "name",
+          label: "修改人",
+          width:180
+        },
+        {
+          pop: "date",
+          label: "修改时间",
+          width:180
+        },
+        {
+          pop: "address",
+          label: "操作",
+          width:180
+        },
+      ],
+      list: [
+        {
+          label: "指示看板",
+          name: "first",
+        },
+        {
+          label: "告警信息",
+          name: "second",
+        },
+        {
+          label: "监控列表",
+          name: "third",
+        },
+        {
+          label: "告警接收规则",
+          name: "fourth",
+        },
+      ],
       tableData6: [
         {
           id: "12987122",
@@ -109,7 +158,7 @@ export default {
           date: "2016-05-03",
           name: "王小虎",
           address: "删除 修改 查看",
-        }
+        },
       ],
       count: 0,
     };
@@ -117,13 +166,10 @@ export default {
   methods: {
     handleClick(tab, event) {},
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
     },
     load(tree, treeNode, resolve) {
-      console.log("treeNode" + tree);
       setTimeout(() => {
         resolve([
           {
@@ -142,11 +188,9 @@ export default {
       }, 1000);
     },
     objectSpanMethod({ row, column, rowIndex, columnIndex }) {
-       console.log("列数" + rowIndex);
-       if(columnIndex == 5 && rowIndex > 0){
-
-       }
-      if (columnIndex === 0 && rowIndex>=2 && rowIndex < 4) {
+      if (columnIndex == 5 && rowIndex > 0) {
+      }
+      if (columnIndex === 0 && rowIndex >= 2 && rowIndex < 4) {
         if (rowIndex % 2 === 0) {
           return {
             rowspan: 2,
@@ -165,7 +209,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .home {
-  /* font-weight: 600; */
   border: #efefef 2px solid;
   overflow: hidden;
 }
@@ -175,7 +218,10 @@ export default {
   padding-top: 10px;
   padding-left: 5px;
 }
-::v-deep .el-breadcrumb__item:last-child .el-breadcrumb__inner, .el-breadcrumb__item:last-child .el-breadcrumb__inner a, .el-breadcrumb__item:last-child .el-breadcrumb__inner a:hover, .el-breadcrumb__item:last-child .el-breadcrumb__inner:hover{
+::v-deep .el-breadcrumb__item:last-child .el-breadcrumb__inner,
+.el-breadcrumb__item:last-child .el-breadcrumb__inner a,
+.el-breadcrumb__item:last-child .el-breadcrumb__inner a:hover,
+.el-breadcrumb__item:last-child .el-breadcrumb__inner:hover {
   color: black;
 }
 .middle {
@@ -189,7 +235,6 @@ export default {
 .mid-img {
   width: 20px;
   height: 20px;
-  // vertical-align: middle;
   margin-left: 10px;
   padding-top: 10px;
 }
@@ -204,7 +249,7 @@ export default {
 ::v-deep .el-tabs__nav-scroll {
   padding-left: 20px;
 }
-::v-deep tbody>.el-table__row>.el-table_1_column_6 {
+::v-deep tbody > .el-table__row > .el-table_1_column_6 {
   color: blue;
 }
 ::v-deep .el-pagination {
@@ -215,12 +260,14 @@ export default {
   height: 20px;
   padding-right: 10px;
 }
-::v-deep .el-table ,.el-table--fit ,.el-table--border, .el-table--enable-row-hover, .el-table--enable-row-transition
-{
+::v-deep .el-table,
+.el-table--fit,
+.el-table--border,
+.el-table--enable-row-hover,
+.el-table--enable-row-transition {
   margin: 2%;
 }
-.table{
+.table {
   width: 96%;
 }
-    
 </style>
